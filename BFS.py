@@ -1,0 +1,56 @@
+from collections import defaultdict
+
+# Directed graph using adjacency list representation
+class Graph:
+
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def addEdge(self,u,v):
+        self.graph[u].append(v)
+
+    def BFS(self, s, target, total):
+        print(f"Starting from {s}, to reach target {target}.")
+        visited = [False] * total
+
+        queue = []
+
+        queue.append(s)
+        visited[s] = True
+
+        while queue:
+            s = queue.pop(0)
+            print(s, end = " ")
+            if(s == target):
+                print("Found")
+                break
+            for i in self.graph[s]: # add target condition
+                if visited[i] == False:
+                    queue.append(i)
+                    visited[i] = True
+
+g = Graph()
+
+g.addEdge(1, 2)
+g.addEdge(1, 3)
+g.addEdge(1, 4)
+g.addEdge(2, 5)
+g.addEdge(2, 6)
+g.addEdge(3, 7)
+g.addEdge(3, 8)
+g.addEdge(4, 9)
+g.addEdge(4, 10)
+g.addEdge(5, 11)
+g.addEdge(5, 12)
+g.addEdge(6, 13)
+g.addEdge(7, 14)
+g.addEdge(8, 15)
+g.addEdge(9, 16)
+g.addEdge(9, 17)
+g.addEdge(10, 18)
+g.addEdge(11, 19)
+g.addEdge(12, 20)
+g.addEdge(16, 21)
+
+print ("Following is Breadth First Traversal")
+g.BFS(1, 14, 21)
