@@ -13,91 +13,123 @@ global ans
 ans = []
 open = []
 closed = []
-
+global index
+index = [-1]
 def C(data):
     node = data.copy()
-    if(node[2] == 1):
-        node[2] = 0
-    else:
+    if(node[2] == 0):    
         node[2] = 1
-    if(node[1] > 0):
-        node[1] = node[1] - 1
-        if(node[0] < node[1]):
+        if(node[1] > 0):
+            node[1] = node[1] - 1
+        else:
             return [-1]
-        if(n - node[0] < n - node[1] and node[0] != 3):
+    else:
+        node[2] = 0
+        if(node[1] < n):
+            node[1] = node[1] + 1
+        else:
             return [-1]
-        ans.append('C')
-        return node
-    return [-1]
+    if((node[0] < node[1] and node[0] != 0) or (n - node[0] < n - node[1] and node[0] != 3)):
+        return [-1]
+    if node in closed or node in open:
+        return [-1]
+    ans.append('C')
+    return node
+
 
 def M(data):
     node = data.copy()
-    if(node[2] == 1):
-        node[2] = 0
-    else:
+    if(node[2] == 0):    
         node[2] = 1
-    if(node[0] > 0):
-        node[0] = node[0] - 1
-        if(node[0] < node[1]):
+        if(node[0] > 0):
+            node[0] = node[0] - 1
+        else:
             return [-1]
-        if(n - node[0] < n - node[1] and node[0] != 3):
+    else:
+        node[2] = 0
+        if(node[0] < n):
+            node[0] = node[0] + 1
+        else:
             return [-1]
-        return node
-    return [-1]
+    if((node[0] < node[1] and node[0] != 0) or (n - node[0] < n - node[1] and node[0] != 3)):
+        return [-1]
+    if node in closed or node in open:
+        return [-1]
+    ans.append('M')
+    return node
 
 def CC(data):
     node = data.copy()
-    if(node[2] == 1):
-        node[2] = 0
-    else:
+    if(node[2] == 0):    
         node[2] = 1
-    if(node[1] > 1):
-        node[1] = node[1] - 2
-        if(node[0] < node[1]):
+        if(node[1] > 1):
+            node[1] = node[1] - 2
+        else:
             return [-1]
-        if(n - node[0] < n - node[1] and node[0] != 3):
+    else:
+        node[2] = 0
+        if(node[1] < n-1):
+            node[1] = node[1] + 2
+        else:
             return [-1]
-        return node
-    return [-1]
+    if((node[0] < node[1] and node[0] != 0) or (n - node[0] < n - node[1] and node[0] != 3)):
+        return [-1]
+    if node in closed or node in open:
+        return [-1]
+    ans.append('CC')
+    return node
 
 def MM(data):
     node = data.copy()
-    if(node[2] == 1):
-        node[2] = 0
-    else:
+    if(node[2] == 0):    
         node[2] = 1
-    if(node[0] > 1):
-        node[0] = node[0] - 2
-        if(node[0] < node[1]):
+        if(node[0] > 1):
+            node[0] = node[0] - 2
+        else:
             return [-1]
-        if(n - node[0] < n - node[1] and node[0] != 3):
+    else:
+        node[2] = 0
+        if(node[0] < n-1):
+            node[0] = node[0] + 2
+        else:
             return [-1]
-        return node
-    return [-1]
+    if((node[0] < node[1] and node[0] != 0) or (n - node[0] < n - node[1] and node[0] != 3)):
+        return [-1]
+    if node in closed or node in open:
+        return [-1]
+    ans.append('MM')
+    return node
 
 def MC(data):
     node = data.copy()
-    if(node[2] == 1):
-        node[2] = 0
-    else:
+    if(node[2] == 0):    
         node[2] = 1
-    if(node[1] > 0 and node[0] > 0):
-        node[1] = node[1] - 1
-        node[0] = node[0] - 1
-        if(node[0] < node[1]):
+        if(node[1] > 0 and node[0] > 0):
+            node[1] = node[1] - 1
+            node[0] = node[0] - 1
+        else:
             return [-1]
-        if(n - node[0] < n - node[1]):
+    else:
+        node[2] = 0
+        if(node[1] < n and node[1] < n):
+            node[1] = node[1] + 1
+            node[0] = node[0] + 1
+        else:
             return [-1]
-        return node
-    return [-1]
+    if((node[0] < node[1] and node[0] != 0) or (n - node[0] < n - node[1] and node[0] != 3)):
+        return [-1]
+    if node in closed or node in open:
+        return [-1]
+    ans.append('MC')
+    return node
 
 def generate_positions(data):
     node = data.copy()
     positions = []
-    c = C(node)
     cc = CC(node)
     mc = MC(node)
     mm = MM(node)
+    c = C(node)
     m = M(node)
     
     if cc[0] != -1:
@@ -122,9 +154,14 @@ def bfs(cur):
         return
     positions = generate_positions(cur)
     # print(positions)
+    print(ans)
+    if len(positions) == 0:
+        ans.pop(index[0])
+    else:
+        index[0] = index[0] + 1
+    
     for position in positions:
-        if position not in closed and position not in open:
-            open.insert(0,position)
+        open.append(position)
     open.remove(cur)
     closed.insert(0,cur)
     print(f"Open:{open}")
@@ -133,8 +170,12 @@ def bfs(cur):
 
 start = [3,3,0]
 open.append(start)
+print(f"Open:{open}")
+print(f"Closed:{closed}")
 bfs(start)
 
-generate_positions([3,3,0])
+ans.pop()
+print(ans)
+
 
 
