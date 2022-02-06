@@ -1,6 +1,6 @@
 import csv
 def AND(str1, str2):
-    if(str1 == str2 or str1 == "None"):
+    if(str1 == str2 or str1 == 'None'):
         return True
     return False
 
@@ -15,17 +15,10 @@ filename = 'data.csv'
 
 with open(filename, 'r') as csvfile:
     csvreader = csv.reader(csvfile)
-    max_none = 0
-    cur_none = 0
-    most_specific = []
     for row in csvreader:
-        for item in row:
-            if(item == "None"):
-                cur_none += 1
-        if(cur_none >= max_none):
-            max_none = cur_none
-            most_specific = row
+        n = len(row)
 
+most_specific = ['None' for i in range(n)]
 
 with open(filename, 'r') as csvfile2:
     parser = csv.reader(csvfile2)
@@ -34,5 +27,7 @@ with open(filename, 'r') as csvfile2:
             for i in range(len(row) - 1):
                 if(AND(most_specific[i], row[i]) == False):
                     most_specific[i] = "?"
+                else:
+                    most_specific[i] = row[i]
 
 print(most_specific[:-1])
