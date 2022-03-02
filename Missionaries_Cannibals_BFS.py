@@ -154,7 +154,7 @@ def bfs(cur):
         return
     positions = generate_positions(cur)
     # print(positions)
-    print(ans)
+    # print(ans)
     if len(positions) == 0:
         ans.pop(index[0])
     else:
@@ -174,7 +174,6 @@ print(f"Open:{open}")
 print(f"Closed:{closed}")
 bfs(start)
 
-ans.pop()
 print(ans)
 
 
