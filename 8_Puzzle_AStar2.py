@@ -1,3 +1,4 @@
+# Manhattan Distance is the heuristic
 def get_start():
     print("Enter Start Position of 8 Puzzle: ")
     start_state = [[0,0,0,0,0,0,0,0,0], 0, 0]  # we store node, f(n), g(n)
@@ -12,18 +13,33 @@ def get_start():
     return start_state
 
 def checker(data):
-    goal = [1,2,3,4,5,6,7,8,0]
+    goal = [1,2,3,8,0,4,7,6,5]
     if(data[0] == goal):
         return True
     return False
 
-def misplaced(data):
-    goal = [1,2,3,4,5,6,7,8,0]
-    count = 0
-    for i in range(9):
-        if(goal[i] != data):
-            count += 1
-    return count
+def search_inlist(data, x):
+    for i in range(3):
+        for j in range(3):
+            if(data[i][j] == x):
+                return i, j
+
+def manhattan(data):
+    goal = [[1,2,3],[8,0,4],[7,6,5]]
+    node = []
+    for i in range(3):
+        x = []
+        for j in range(3):
+            x.append(data[j + (i*3)])
+        node.append(x)
+    # print(node)
+    dist = 0
+    for i in range(3):
+        for j in range(3):
+            x, y = search_inlist(goal, node[i][j])
+            dist += abs(x-i) + abs(y-j)
+    
+    return dist
 
 # cost = g(n) + f(n)
 # g(n) = g(n-1) + 1 (step cost is 1)
@@ -35,7 +51,7 @@ def move_up(data, index):
     exchange = node[index - 3]
     node[index] = exchange
     node[index - 3] = 0
-    cost = data[2] + 1 + misplaced(node) 
+    cost = data[2] + 1 + manhattan(node) 
     return [node, cost, data[2] + 1]
 
 # move down
@@ -44,7 +60,7 @@ def move_down(data, index):
     exchange = node[index + 3]
     node[index] = exchange
     node[index + 3] = 0
-    cost = data[2] + 1 + misplaced(node)
+    cost = data[2] + 1 + manhattan(node)
     return [node, cost, data[2] + 1]
 
 # move left
@@ -53,7 +69,7 @@ def move_left(data, index):
     exchange = node[index - 1]
     node[index] = exchange
     node[index - 1] = 0
-    cost = data[2] + 1 + misplaced(node)
+    cost = data[2] + 1 + manhattan(node)
     return [node, cost, data[2] + 1]
 
 # move right
@@ -62,7 +78,7 @@ def move_right(data, index):
     exchange = node[index + 1]
     node[index] = exchange
     node[index + 1] = 0
-    cost = data[2] + 1 + misplaced(node)
+    cost = data[2] + 1 + manhattan(node)
     return [node, cost, data[2] + 1]
 
 def search_empty(data):
@@ -102,57 +118,31 @@ def node_search(data):
 
     return final_data
     
-"""
-Goal test is applied to each node when it is generated rather than when it is selected for
-expansion.
-"""
 def astar(data):
     result = 0
     queue = [data] # queue of the frontier
-    visited = [data] # array of all positions explored
+    visited = [data[0]] # array of all positions explored
     while(result == 0):
 
         new_nodes = node_search(queue[0])
         for i in new_nodes:
-            if(i not in visited): # donot add in queue if already in visited (already explored)
+            if(i[0] not in visited): # donot add in queue if already in visited (already explored)
                 queue.append(i)
-                if(checker(queue[0])):
+                if(checker(i)):
                     result = 1
                     break
                 
         queue.sort(key = lambda x:x[1])
-        visited.append(queue[0])
+        if(queue[0][0] not in visited):
+            visited.append(queue[0][0])
+        # print(visited)
         queue.remove(queue[0]) # equivalent to a dequeue operation
         
-    print(f"Found via A*, present at the start of the queue.")
+    print(f"Found via A* Mahhattan distance heuristic, present at the start of the queue.")
     print(f"Cost: {queue[0][1]}")
     print(queue)
-
-""" Same algorithm, goal test is applied to each node when it is selected for expansion rather than when it is generated.
-
-def astar(data):
-    result = 0
-    queue = [data] # queue of the frontier
-    visited = [data] # array of all positions explored
-    while(result == 0):
-
-        new_nodes = node_search(queue[0])
-        for i in new_nodes:
-            if(i not in visited): # donot add in queue if already in visited (already explored)
-                queue.append(i)
-        
-        queue.sort(key = lambda x:x[1])
-
-        if(checker(queue[0])):
-            result = 1
-        else:
-            visited.append(queue[0])
-            queue.remove(queue[0]) # equivalent to a dequeue operation
-        
-    print(f"Found via A*, present at the start of the queue.")
-    print(f"Cost: {queue[0][1]}")
-    print(queue)
-"""
 
 data = get_start()
+# just checking mahhattan function's working
+print(manhattan(data[0]))
 astar(data)

@@ -105,7 +105,7 @@ def node_search(data):
 """
 Goal test is applied to each node when it is generated rather than when it is selected for
 expansion.
-"""
+
 def astar(data):
     result = 0
     queue = [data] # queue of the frontier
@@ -128,8 +128,8 @@ def astar(data):
     print(f"Cost: {queue[0][1]}")
     print(queue)
 
-""" Same algorithm, goal test is applied to each node when it is selected for expansion rather than when it is generated.
-
+Same algorithm, goal test is applied to each node when it is selected for expansion rather than when it is generated.
+"""
 def astar(data):
     result = 0
     queue = [data] # queue of the frontier
@@ -152,7 +152,6 @@ def astar(data):
     print(f"Found via A*, present at the start of the queue.")
     print(f"Cost: {queue[0][1]}")
     print(queue)
-"""
 
 data = get_start()
 astar(data)
